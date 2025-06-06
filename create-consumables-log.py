@@ -5,6 +5,19 @@ import re
 
 pivot_data = None  # Variable global para guardar la tabla procesada
 
+def cargar_excel():
+    global pivot_data
+    filepath = filedialog.askopenfilename(filetypes=[("Excel files", ".xlsx")])
+    if not filepath:
+        return
+    try:
+        df = pd.read_excel(filepath, index_col=0)
+        pivot_data = df
+        messagebox.showinfo("Éxito", f"Archivo cargado correctamente.\nAhora podés buscar por jugador.")
+    except Exception as e:
+        messagebox.showerror("Error", f"No se pudo cargar el archivo:\n{e}")
+
+
 def procesar_log():
     global pivot_data
     personaje = entry_personaje.get().strip()
@@ -74,6 +87,9 @@ entry_personaje.grid(row=0, column=1, padx=10)
 
 btn_procesar = tk.Button(root, text="Seleccionar Log y Generar Resumen", command=procesar_log, height=2, width=35)
 btn_procesar.pack(pady=10)
+
+btn_cargar_excel = tk.Button(root, text="Cargar archivo .xlsx existente", command=cargar_excel, height=2, width=35)
+btn_cargar_excel.pack(pady=5)
 
 separator = tk.Frame(height=2, bd=1, relief="sunken")
 separator.pack(fill="x", padx=10, pady=10)
