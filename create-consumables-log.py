@@ -24,6 +24,10 @@ def procesar_log():
                 if match:
                     jugador = match.group(1)
                     consumible = match.group(2).strip().rstrip(".")
+
+                    # Quitar " on <algo>" si existe
+                    consumible = re.sub(r"\s+on\s+.*$", "", consumible, flags=re.IGNORECASE)
+
                     data.append((jugador, consumible))
 
     if not data:
@@ -31,7 +35,7 @@ def procesar_log():
         return
 
     df = pd.DataFrame(data, columns=["Jugador", "Consumible"])
-    pivot = df.pivot_table(index="Jugador", columns="Consumible", aggfunc="size", fill_value=0)
+    pivot = df.pivot_table(index="Consumible", columns="Jugador", aggfunc="size", fill_value=0)
 
     save_path = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel Files", ".xlsx")])
     if save_path:
