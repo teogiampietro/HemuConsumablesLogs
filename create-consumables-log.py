@@ -20,7 +20,7 @@ def cargar_excel():
 
 def procesar_log():
     global pivot_data
-    personaje = entry_personaje.get().strip()
+    personaje = entry_personaje.get().strip().lower()
     if not personaje:
         messagebox.showwarning("Campo requerido", "Por favor, ingrese el nombre del personaje.")
         return
@@ -40,7 +40,7 @@ def procesar_log():
                     jugador = match.group(1)
                     consumible = match.group(2).strip().rstrip(".")
                     consumible = re.sub(r"\s+on\s+.*$", "", consumible, flags=re.IGNORECASE)
-                    data.append((jugador, consumible))
+                    data.append((jugador.lower(), consumible))
 
     if not data:
         messagebox.showinfo("Resultado", "No se encontraron líneas con 'uses'.")
@@ -48,7 +48,7 @@ def procesar_log():
 
     df = pd.DataFrame(data, columns=["Jugador", "Consumible"])
     pivot = df.pivot_table(index="Consumible", columns="Jugador", aggfunc="size", fill_value=0)
-    pivot_data = pivot  # Guardamos la tabla transpuesta en variable global
+    pivot_data = pivot 
 
     save_path = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel Files", ".xlsx")])
     if save_path:
@@ -57,7 +57,7 @@ def procesar_log():
 
 def mostrar_consumibles():
     global pivot_data
-    nombre = entry_busqueda.get().strip()
+    nombre = entry_busqueda.get().strip().lower()
     if pivot_data is None:
         messagebox.showwarning("Primero procesá el log", "Tenés que procesar un log antes de buscar.")
         return
